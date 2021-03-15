@@ -29,10 +29,10 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let appId = '1EFRXxg' , homeDataFunPrefix = 'interact_template', collectScoreFunPrefix = 'harmony', message = ''
 let lotteryResultFunPrefix = homeDataFunPrefix, browseTime = 6
 const inviteCodes = [
-  'T0206qwtB09HohePeUeryLJVCjVQmoaT5kRrbA@T026tv5zRxcY9lbXTxv2kfUIcLnkxACjVQmoaT5kRrbA@T0225KkcRR1MoQeCIE79naQJdACjVQmoaT5kRrbA@T0225KkcRh8f_AGBJkv1kKINdwCjVQmoaT5kRrbA@T0205KkcPnlwqyeBWGeN1ZJzCjVQmoaT5kRrbA@T0225KkcRhgf8lyDdR7xwP4JIACjVQmoaT5kRrbA@T010-b4vCEZcrACjVQmoaT5kRrbA@T0147awsGkdIvQ2JIwCjVQmoaT5kRrbA@T0205KkcAktviim9SWS3471KCjVQmoaT5kRrbA@T0225KkcRUsco1DXJhPwkvFbIACjVQmoaT5kRrbA@T0225KkcREgQpFDXdRj9waULcwCjVQmoaT5kRrbA@T0225KkcRkseoQCEJUv3xvFcdQCjVQmoaT5kRrbA@T0225KkcRUoY8AWDcR6hxfdYJgCjVQmoaT5kRrbA',
-  'T0206qwtB09HohePeUeryLJVCjVQmoaT5kRrbA@T026tv5zRxcY9lbXTxv2kfUIcLnkxACjVQmoaT5kRrbA@T0225KkcRR1MoQeCIE79naQJdACjVQmoaT5kRrbA@T0225KkcRh8f_AGBJkv1kKINdwCjVQmoaT5kRrbA@T0205KkcPnlwqyeBWGeN1ZJzCjVQmoaT5kRrbA@T0225KkcRhgf8lyDdR7xwP4JIACjVQmoaT5kRrbA@T010-b4vCEZcrACjVQmoaT5kRrbA@T0147awsGkdIvQ2JIwCjVQmoaT5kRrbA@T0205KkcAktviim9SWS3471KCjVQmoaT5kRrbA@T0225KkcRUsco1DXJhPwkvFbIACjVQmoaT5kRrbA@T0225KkcREgQpFDXdRj9waULcwCjVQmoaT5kRrbA@T0225KkcRkseoQCEJUv3xvFcdQCjVQmoaT5kRrbA@T0225KkcRUoY8AWDcR6hxfdYJgCjVQmoaT5kRrbA',
+  'T019-aknAFRllhyoQlyI46gCjVQmoaT5kRrbA@T010_aU6SR8Q_QCjVQmoaT5kRrbA@T0225KkcRhcbp1CBJhv0wfZedQCjVQmoaT5kRrbA@T027Zm_olqSxIOtH97BATGmKoWraLawCjVQmoaT5kRrbA',
+  'T019-aknAFRllhyoQlyI46gCjVQmoaT5kRrbA@T010_aU6SR8Q_QCjVQmoaT5kRrbA@T027Zm_olqSxIOtH97BATGmKoWraLawCjVQmoaT5kRrbA@T0225KkcRk1N_FeCJhv3xvdfcQCjVQmoaT5kRrbA'
 ];
-const randomCount = 0 ;
+const randomCount = $.isNode() ? 20 : 5;
 const notify = $.isNode() ? require('./sendNotify') : '';
 let merge = {}
 //IOS等用户直接用NobyDa的jd cookie
@@ -113,7 +113,7 @@ function interact_template_getHomeData(timeout = 0) {
             console.log("\n" + data.data.result.taskVos[i].taskType + '-' + data.data.result.taskVos[i].taskName  + '-' + (data.data.result.taskVos[i].status === 1 ? `已完成${data.data.result.taskVos[i].times}-未完成${data.data.result.taskVos[i].maxTimes}` : "全部已完成"))
             //签到
             if (data.data.result.taskVos[i].taskName === '邀请好友助力') {
-              console.log(`您的好友助力码为:${data.data.result.taskVos[i].assistTaskDetailVo.taskToken}`)
+              console.log(`\n【京东账号${$.index}（${$.nickName || $.UserName}）的${$.name}好友互助码】${data.data.result.taskVos[i].assistTaskDetailVo.taskToken}\n`);
               for (let code of $.newShareCodes) {
                 if (!code) continue
                 await harmony_collectScore(code, data.data.result.taskVos[i].taskId);
@@ -363,7 +363,7 @@ function TotalBean() {
               return
             }
             if (data['retcode'] === 0) {
-              $.nickName = data['base'].nickname;
+              $.nickName = (data['base'] && data['base'].nickname) || $.UserName;
             } else {
               $.nickName = $.UserName
             }
